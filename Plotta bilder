@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Ladda upp filerna som ska plottas
+base_slice = np.loadtxt(r"C:\Users\xhaaab\Downloads\data\t2slicefor42.csv", delimiter=",")
+tek_mask = np.loadtxt(r"C:\Users\xhaaab\Downloads\data\final_42_tek.csv", delimiter=",")
+
+# Normalisera
+base_norm = (base_slice - np.min(base_slice)) / np.ptp(base_slice)
+
+# Binärusera
+tek_bin = (tek_mask > 0).astype(int)
+
+
+rgb_image = np.stack([base_norm]*3, axis=-1)
+
+#överlapa
+overlay_color = np.array([0.5, 0.8, 1.0]) #blå
+#overlay_color = np.array([0.5, 1.0, 0.5])  # grön
+
+
+alpha = 0.6 # alfa för transparency
+
+
+rgb_image[tek_bin == 1] = (1 - alpha) * rgb_image[tek_bin == 1] + alpha * overlay_color
+
+# Plotta
+plt.figure(figsize=(6, 6))
+plt.imshow(rgb_image)
+plt.axis('off')
+plt.tight_layout()
+plt.show()
